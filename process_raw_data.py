@@ -2,7 +2,7 @@ import os
 import csv
 import json
 
-def process_csv_folder(csv_folder_path, output_json):
+def process_altitude(csv_folder_path, output_json):
     data = {}
 
     for month_folder in os.listdir(csv_folder_path):
@@ -33,9 +33,11 @@ def process_csv_folder(csv_folder_path, output_json):
 
     with open(output_json, 'w') as json_file:
         json.dump(data, json_file, indent=2)
+        
+
 
 # Get Raw_Meteorological_Data file path
-raw_data_path = os.path.join(os.getcwd(), 'Raw_MeteoroLogic_Data')
-output_json = os.path.join(os.getcwd(), 'meteorological_data.json')
+raw_data_path = os.path.join(os.getcwd(), 'Raw_MeteoroLogic_Data_Altitude')
+output_json = os.path.join(os.getcwd(), 'altitude.json')
 
-process_csv_folder(raw_data_path, output_json)
+process_altitude(raw_data_path, output_json)
