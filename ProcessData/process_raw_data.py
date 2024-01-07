@@ -2,6 +2,20 @@ import os
 import csv
 import json
 
+def separate_by_days(data):
+    separated_data = {}
+    
+    current_day = None
+    for entry in data:
+        if entry["Time"] == "" and entry["Solar Position"] == "Altitude":
+            # This is a marker indicating a new day
+            current_day = []
+            separated_data[len(separated_data) + 1] = current_day
+        elif current_day is not None:
+            current_day.append(entry)
+    
+    return separated_data
+
 def process_altitude(csv_folder_path, output_json):
     data = {}
 
@@ -21,20 +35,21 @@ def process_altitude(csv_folder_path, output_json):
                             with open(file_path, 'r') as csv_file:
                                 csv_reader = csv.DictReader(csv_file)
                                 for row in csv_reader:
-                                    # Getting only Time and solar point coluns
+                                    # Getting only Time and solar point columns
                                     row = {'Time': row['Time'], 'Solar Position': row['Solar Position']}
                                     day_data.append(row)
 
+                    # Separate day_data into different days
+                    separated_day_data = separate_by_days(day_data)
+
                     # Ensure that the month key exists in the month_data dictionary
-                    month_data[day_folder] = day_data
+                    month_data[day_folder] = separated_day_data
 
             # Assign day_data to the specific month in the data dictionary
             data[month_folder] = month_data
 
     with open(output_json, 'w') as json_file:
         json.dump(data, json_file, indent=2)
-        
-
 
 # Get Raw_Meteorological_Data file path
 raw_data_path = os.path.join(os.getcwd(), 'Raw_MeteoroLogic_Data_Altitude')
