@@ -1,6 +1,7 @@
 # PFC.py
 
-from AltitudeReader import AltitudeReader
+from Reader import AltitudeReader
+from Reader import AzimuthalReader
 import os
 
 def main():
@@ -15,6 +16,20 @@ def main():
 
     # Access data for a specific month (e.g., "ABR")
     position = reader.get_solar_position_for_month_and_day("ABR", 1, "06:30")
+    print(position)  # Output: 9.13
+
+    # Print data for a specific month
+    
+    json_file_path = os.path.join("MainProgram", "azimuthal.json")
+
+    # Initialize AltitudeReader with the absolute path to 'azimuthal.json'
+    with open(json_file_path, "r") as file:
+        json_data = file.read()
+
+    reader = AzimuthalReader(json_data)
+
+    # Access data for a specific month (e.g., "ABR")
+    position = reader.get_solar_noon_for_month_and_day("ABR", 1)
     print(position)  # Output: 9.13
 
     # Print data for a specific month
